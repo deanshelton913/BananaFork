@@ -1,7 +1,7 @@
 {
   "name": "banana-fork",
   "displayName": "Banana Fork",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Easy parallel job processing in NodeJS with Banana Fork.",
   "repository": {
     "type": "git",
