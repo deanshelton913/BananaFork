@@ -4,7 +4,7 @@
 
 # Banana Fork
 
-**Easy parallel processing in NodeJS.**
+**Easy parallel job processing in NodeJS.**
 
 ## Description
 
