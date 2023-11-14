@@ -1,4 +1,4 @@
-import { bananaFork } from '../index';
+import { bananaFork } from 'banana-fork';
 import { logger } from '../util/logger';
 
 // Here we just make an async "main" function for our app to run.

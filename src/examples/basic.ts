@@ -1,4 +1,4 @@
-import { bananaFork } from '../index';
+import { bananaFork } from 'banana-fork';
 
 (async () => {
   await bananaFork({
