@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/logo.png" height="200" />
+  <img src="https://i.imgur.com/8hMvixZ.png" height="200" />
 </p>
 
 # Banana Fork
@@ -10,26 +10,11 @@
 
 BananaFork is a lightweight wrapper of the NodeJS cluster module. It's also tiny!! (18.6 kB)
 
-
-Just define 3 things:
-
-1. How many processes you want to fork.
-2. How to get your full list of work-items.
-3. What your workers do with each subset of items.
-
-The manager process will evenly distribute your workload amongst worker threads and run them until they either error or complete.
-
-Workloads can be of any type.
-
-If you expect long-running workloads, consider using `reportDurationInMs` in combination with the `messageProcessor` method to log periodically on how many items each worker has completed. See examples below for inspiration.
-
-
 ## Getting Started
 
 ```bash
 npm i banana-fork
 ```
-
 
 
 ### Bare-Bones Example
@@ -53,6 +38,20 @@ import { bananaFork } from 'banana-fork';
   });
 })();
 ```
+
+## What do i do?
+Just define 3 things:
+
+1. How many processes you want to fork.
+2. How to get your full list of work-items.
+3. What your workers do with each subset of items.
+
+The manager process will evenly distribute your workload amongst worker threads and run them until they either error or complete.
+
+Workloads can be of any type.
+
+If you expect long-running workloads, consider using `reportDurationInMs` in combination with the `messageProcessor` method to log periodically on how many items each worker has completed. See examples below for inspiration.
+
 
 ## Full-Featured Example
 
