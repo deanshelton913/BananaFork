@@ -1,11 +1,14 @@
 {
-  "name": "@niftys-inc/banana-fork",
+  "name": "banana-fork",
   "displayName": "Banana Fork",
   "version": "1.0.4",
-  "description": "Easy parallel processing in NodeJS with Banana Fork.",
+  "description": "Easy parallel job processing in NodeJS with Banana Fork.",
   "keywords": [
     "thread",
+    "job",
+    "jobs",
     "multi-thread",
+    "long running",
     "multiThread",
     "parallel",
     "banana",
@@ -14,29 +17,29 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "@niftys-inc:registry": "https://gitlab.com/api/v4/projects/34298532/packages/npm/"
-  },
   "main": "dist/index.js",
   "scripts": {
     "semantic-release": "semantic-release --debug",
     "build": "tsc --project tsconfig.json",
     "test": "echo \"Error: no test specified!\" && exit 1"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "author": "Dean Shelton",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "ts-node": "^10.7.0",
-    "winston": "^3.6.0"
+    "ts-node": "10.9.1",
+    "winston": "3.11.0"
   },
   "devDependencies": {
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/gitlab": "^7.0.4",
-    "@semantic-release/npm": "^9.0.1",
-    "@types/node": "^17.0.21",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "9.2.3",
+    "@semantic-release/npm": "11.0.1",
+    "@types/node": "20.9.0",
     "prettier": "3.1.0",
-    "semantic-release": "^19.0.2",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.2"
+    "semantic-release": "22.0.7",
+    "tslib": "2.6.2",
+    "typescript": "5.2.2"
   }
 }

@@ -8,7 +8,7 @@
 
 ## Description
 
-BananaFork is a lightweight wrapper of the NodeJS cluster module. It's also tiny!!
+BananaFork is a lightweight wrapper of the NodeJS cluster module. It's also tiny!! (18.6 kB)
 
 
 Just define 3 things:
