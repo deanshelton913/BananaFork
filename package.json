@@ -23,9 +23,6 @@
     "build": "tsc --project tsconfig.json",
     "test": "echo \"Error: no test specified!\" && exit 1"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "author": "Dean Shelton",
   "license": "MIT",
   "dependencies": {
