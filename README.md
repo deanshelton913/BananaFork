@@ -8,27 +8,29 @@
 
 ## Description
 
-BananaFork is a lightweight wrapper of the NodeJS cluster module.
+BananaFork is a lightweight wrapper of the NodeJS cluster module. It's also tiny!!
 
-This package is great for processing large jobs and spreading the work over multiple cores.
 
-It's also tiny!!
+Just define 3 things:
+
+1. How many processes you want to fork.
+2. How to get your full list of work-items.
+3. What your workers do with each subset of items.
+
+The manager process will evenly distribute your workload amongst worker threads and run them until they either error or complete.
+
+Workloads can be of any type.
+
+If you expect long-running workloads, consider using `reportDurationInMs` in combination with the `messageProcessor` method to log periodically on how many items each worker has completed. See examples below for inspiration.
+
 
 ## Getting Started
-
-**Install**
 
 ```bash
 npm i banana-fork
 ```
 
-**Implement**
 
-Out of the box there are some great defaults. Just define 3 things:
-
-1. How many processes you want to fork.
-2. How to get your full list of work-items.
-3. How your workers will process the items.
 
 ### Bare-Bones Example
 
@@ -52,50 +54,7 @@ import { bananaFork } from 'banana-fork';
 })();
 ```
 
-### Configuration Options
-
-| Name               | Type     | Required | Description                                                                                                                                                 |
-| ------------------ | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| workerCount        | number   | yes      | The number of processes to fork. Should not exceed number of CPUs on host machine.                                                                          |
-| getArrayOfItems    | function | yes      | An async function which resolves a list of items that will be split into equal chunks and distributed amongst worker processes.                             |
-| workerMain         | function | yes      | An async function which handles items distributed by the "manager" process. For accurate reporting it should increment `incrementMePerItemProcessed.count`. |
-| messageProcessor   | function | no       | This optional method is an async function that handles messages sent from worker processes. The shape and type of each `WorkerMessage` is documented below. |
-| reportDurationInMs | number   | no       | The duration in ms which each worker should report it's progress using a `ReportMessage`. If falsy, no reports will be sent.                                |
-
-### `WorkerMessage` Interface
-
-```typescript
-type WorkerMessage =
-  | WorkerDoneMessage
-  | WorkerErrorMessage
-  | WorkerStartMessage
-  | WorkerReportMessage;
-
-interface WorkerDoneMessage {
-  cmd: 'done';
-  data: { id: number };
-}
-
-interface WorkerErrorMessage {
-  cmd: 'error';
-  data: Error;
-}
-interface WorkerStartMessage {
-  cmd: 'starting';
-  data: { id: number; length: number };
-}
-
-interface WorkerReportMessage {
-  cmd: 'report';
-  data: {
-    id: number;
-    completedSoFar: number;
-    total: number;
-  };
-}
-```
-
-## Example
+## Full-Featured Example
 
 ```typescript
 (async () => {
@@ -126,6 +85,68 @@ interface WorkerReportMessage {
   });
 })();
 ```
+### Configuration Options
+
+| Name               | Type     | Required | Description                                                                                                                                                 |
+| ------------------ | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| workerCount        | number   | yes      | The number of processes to fork. Should not exceed number of CPUs on host machine.                                                                          |
+| getArrayOfItems    | function | yes      | An async function which resolves a list of items that will be split into equal chunks and distributed amongst worker processes.                             |
+| workerMain         | function | yes      | An async function which handles items distributed by the "manager" process. For accurate reporting it should increment `incrementMePerItemProcessed.count`. |
+| messageProcessor   | function | no       | This optional method is an async function that handles messages sent from worker processes. The shape and type of each `WorkerMessage` is documented below. |
+| reportDurationInMs | number   | no       | The duration in ms which each worker should report it's progress using a `ReportMessage`. If falsy, no reports will be sent.                                |
+
+### `WorkerMessage` Interface
+
+```typescript
+
+enum WorkerCmd {
+  DONE = 'done', // Sent by worker when job has ran to completion without error.
+  ERROR = 'error', // Sent by worker when work stopped due to error.
+  STARTING = 'starting', // Sent by worker when work begins.
+  REPORT = 'report', // Sent by worker when reporting periodically.
+  WORK = 'work', // Sent by the manager process when delegating workload.
+}
+
+type WorkerMessage<T = unknown> =
+  | WorkerDoneMessage
+  | WorkerErrorMessage
+  | WorkerStartMessage
+  | WorkerWorkMessage<T>
+  | WorkerReportMessage;
+
+interface WorkerDoneMessage {
+  cmd: WorkerCmd.DONE;
+  data: { id: number };
+}
+
+interface WorkerErrorMessage {
+  cmd: WorkerCmd.ERROR;
+  data: Error;
+}
+interface WorkerStartMessage {
+  cmd: WorkerCmd.STARTING;
+  data: { id: number; length: number };
+}
+
+interface WorkerReportMessage {
+  cmd: WorkerCmd.REPORT;
+  data: {
+    id: number;
+    completedSoFar: number;
+    total: number;
+  };
+}
+
+interface WorkerWorkMessage<T> {
+  cmd: WorkerCmd.WORK;
+  data: {
+    id: number;
+    subsetOfItems: T[];
+  };
+}
+
+```
+
 
 ## Sending your own messages from workers
 
